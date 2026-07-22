@@ -1,6 +1,6 @@
 {
 	"name": "@asapio/n8n-nodes-asapio",
-	"version": "0.1.4",
+	"version": "0.1.5",
 	"publishConfig": {
 		"access": "public"
 	},
