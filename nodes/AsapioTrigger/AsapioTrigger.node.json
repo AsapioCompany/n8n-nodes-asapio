@@ -1,0 +1,18 @@
+{
+	"node": "n8n-nodes-asapio.asapioTrigger",
+	"nodeVersion": "1.0",
+	"codexVersion": "1.0",
+	"categories": ["Development", "Developer Tools"],
+	"resources": {
+		"credentialDocumentation": [
+			{
+				"url": "https://github.com/AsapioCompany/n8n-nodes-asapio#credentials"
+			}
+		],
+		"primaryDocumentation": [
+			{
+				"url": "https://github.com/AsapioCompany/n8n-nodes-asapio#readme"
+			}
+		]
+	}
+}
