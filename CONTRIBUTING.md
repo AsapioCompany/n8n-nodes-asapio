@@ -26,3 +26,5 @@ Formatting is enforced via Prettier and the n8n community-node ESLint ruleset (`
 ## Releasing
 
 Releases are cut by maintainers via `npm run release` (lints, builds, bumps the version, updates the changelog, tags, and pushes). Pushing a version tag triggers `.github/workflows/publish.yml`, which publishes to npm with provenance.
+
+**Never use `npm run release -- --publish`** for a version you intend to submit to the n8n Creator Portal — that flag publishes directly from your machine without a provenance attestation, and n8n's verification review rejects non-provenance versions outright. Only use it, if ever, to reserve a brand-new package name before Trusted Publishing is configured.
