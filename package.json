@@ -16,7 +16,7 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/AsapioCompany/n8n-nodes-asapio.git"
+		"url": "git+https://github.com/AsapioCompany/n8n-nodes-asapio.git"
 	},
 	"scripts": {
 		"build": "n8n-node build",

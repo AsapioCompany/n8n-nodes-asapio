@@ -21,6 +21,8 @@ npm install @asapio/n8n-nodes-asapio
 
 The **ASAPIO API** credential holds the **Signing Secret** configured for the corresponding n8n target in Event Studio. This is the shared secret ASAPIO uses to compute the `X-ASAPIO-Signature` header on the sender side.
 
+> **Note on "Test" button:** This node is a passive webhook receiver — ASAPIO calls n8n, not the other way around, so there is no ASAPIO API this credential could authenticate against. Clicking **Test** in the credential dialog only checks that `asapio.com` is reachable from your n8n instance; it does **not** validate the Signing Secret itself (which never leaves your environment). The Signing Secret is verified for real on every incoming event, inside the node's `webhook()` handler, against the raw request body.
+
 ## Node: ASAPIO Event Trigger
 
 | Parameter | Description |
