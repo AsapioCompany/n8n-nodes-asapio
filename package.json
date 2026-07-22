@@ -1,13 +1,15 @@
 {
 	"name": "@asapio/n8n-nodes-asapio",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"publishConfig": {
 		"access": "public"
 	},
 	"description": "n8n community node to receive events dispatched by the ASAPIO Integration Add-on (Event Studio)",
 	"license": "MIT",
 	"homepage": "https://github.com/AsapioCompany/n8n-nodes-asapio",
-	"keywords": ["n8n-community-node-package"],
+	"keywords": [
+		"n8n-community-node-package"
+	],
 	"author": {
 		"name": "ASAPIO GmbH",
 		"email": "ffa@asapio.com"
@@ -26,12 +28,18 @@
 		"prepublishOnly": "n8n-node prerelease",
 		"test": "jest"
 	},
-	"files": ["dist"],
+	"files": [
+		"dist"
+	],
 	"n8n": {
 		"n8nNodesApiVersion": 1,
 		"strict": true,
-		"credentials": ["dist/credentials/AsapioApi.credentials.js"],
-		"nodes": ["dist/nodes/AsapioTrigger/AsapioTrigger.node.js"]
+		"credentials": [
+			"dist/credentials/AsapioApi.credentials.js"
+		],
+		"nodes": [
+			"dist/nodes/AsapioTrigger/AsapioTrigger.node.js"
+		]
 	},
 	"devDependencies": {
 		"@n8n/node-cli": "^0.40.2",
