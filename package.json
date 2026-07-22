@@ -1,6 +1,9 @@
 {
-	"name": "n8n-nodes-asapio",
+	"name": "@asapio/n8n-nodes-asapio",
 	"version": "0.1.0",
+	"publishConfig": {
+		"access": "public"
+	},
 	"description": "n8n community node to receive events dispatched by the ASAPIO Integration Add-on (Event Studio)",
 	"license": "MIT",
 	"homepage": "https://github.com/AsapioCompany/n8n-nodes-asapio",

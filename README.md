@@ -1,4 +1,4 @@
-# n8n-nodes-asapio
+# @asapio/n8n-nodes-asapio
 
 An [n8n](https://n8n.io) community node to receive events dispatched by the **ASAPIO Integration Add-on** (Event Studio) from your SAP® software, via its n8n output channel.
 
@@ -6,10 +6,10 @@ This package provides the **ASAPIO Event Trigger** node, a webhook trigger that 
 
 ## Installation
 
-Follow the n8n [community nodes installation guide](https://docs.n8n.io/integrations/community-nodes/installation/), using `n8n-nodes-asapio` as the package name.
+Follow the n8n [community nodes installation guide](https://docs.n8n.io/integrations/community-nodes/installation/), using `@asapio/n8n-nodes-asapio` as the package name.
 
 ```bash
-npm install n8n-nodes-asapio
+npm install @asapio/n8n-nodes-asapio
 ```
 
 ## Credentials
