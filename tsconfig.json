@@ -1,9 +1,8 @@
 {
 	"compilerOptions": {
 		"strict": true,
-		"isolatedModules": true,
-		"module": "nodenext",
-		"moduleResolution": "nodenext",
+		"module": "commonjs",
+		"moduleResolution": "node",
 		"target": "es2019",
 		"lib": ["es2019", "es2020", "es2022.error"],
 		"removeComments": true,
@@ -17,7 +16,7 @@
 		"esModuleInterop": true,
 		"resolveJsonModule": true,
 		"incremental": true,
-		"declaration": false,
+		"declaration": true,
 		"sourceMap": true,
 		"skipLibCheck": true,
 		"outDir": "./dist/"
