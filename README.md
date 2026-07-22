@@ -4,6 +4,11 @@ An [n8n](https://n8n.io) community node to receive events dispatched by the **AS
 
 This package provides the **ASAPIO Event Trigger** node, a webhook trigger that verifies the HMAC-SHA256 signature ASAPIO attaches to every dispatched event and starts your workflow with the verified payload.
 
+## Prerequisites
+
+- A source system running **SAP S/4HANA** or **SAP ECC**
+- The **latest version of the ASAPIO Integration Add-on** installed on that system, with the **HMAC REST connector** configured for the n8n target endpoint
+
 ## Installation
 
 Follow the n8n [community nodes installation guide](https://docs.n8n.io/integrations/community-nodes/installation/), using `@asapio/n8n-nodes-asapio` as the package name.
