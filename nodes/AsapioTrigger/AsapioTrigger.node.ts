@@ -8,7 +8,7 @@ import type {
 	INodeType,
 	INodeTypeDescription,
 } from 'n8n-workflow';
-import { NodeConnectionTypes } from 'n8n-workflow';
+import { NodeConnectionTypes, NodeOperationError } from 'n8n-workflow';
 
 import { computeSignature, extractHexSignature, isTimestampFresh, safeCompare } from './signature';
 
@@ -46,6 +46,7 @@ export class AsapioTrigger implements INodeType {
 				httpMethod: 'POST',
 				responseMode: 'onReceived',
 				path: '={{$parameter["path"]}}',
+				rawBody: true,
 			},
 		],
 		triggerPanel: {
@@ -139,9 +140,14 @@ export class AsapioTrigger implements INodeType {
 		const req = this.getRequestObject();
 		const headers = this.getHeaderData() as Record<string, string | string[] | undefined>;
 
-		const rawBody: Buffer = Buffer.isBuffer(req.rawBody)
-			? req.rawBody
-			: Buffer.from(JSON.stringify(this.getBodyData() ?? {}));
+		if (!Buffer.isBuffer(req.rawBody)) {
+			throw new NodeOperationError(
+				this.getNode(),
+				'Raw body unavailable — set rawBody: true in the webhook description. ' +
+					'Refusing to verify HMAC against a re-serialized body.',
+			);
+		}
+		const rawBody: Buffer = req.rawBody;
 
 		const signatureHeader = headers[SIGNATURE_HEADER];
 		const timestampHeader = headers[TIMESTAMP_HEADER];
