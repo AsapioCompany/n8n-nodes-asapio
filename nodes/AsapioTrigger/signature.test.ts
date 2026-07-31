@@ -1,3 +1,5 @@
+import { createHmac } from 'crypto';
+
 import {
 	computeSignature,
 	extractHexSignature,
@@ -20,23 +22,40 @@ describe('extractHexSignature', () => {
 });
 
 describe('computeSignature', () => {
+	const ts = '1700000000';
+
 	it('computes a deterministic HMAC-SHA256 hex digest', () => {
 		const body = Buffer.from('{"event":"test"}');
-		const signature = computeSignature('my-secret', body);
+		const signature = computeSignature('my-secret', ts, body);
 
-		expect(signature).toBe(computeSignature('my-secret', body));
+		expect(signature).toBe(computeSignature('my-secret', ts, body));
 		expect(signature).toMatch(/^[0-9a-f]{64}$/);
+	});
+
+	it('signs "<timestamp>." + rawBody, matching the ASAPIO backend', () => {
+		const body = Buffer.from('{"event":"test"}');
+		const expected = createHmac('sha256', 'my-secret')
+			.update(Buffer.concat([Buffer.from(`${ts}.`), body]))
+			.digest('hex');
+		expect(computeSignature('my-secret', ts, body)).toBe(expected);
 	});
 
 	it('produces a different signature for a different secret', () => {
 		const body = Buffer.from('{"event":"test"}');
-		expect(computeSignature('secret-a', body)).not.toBe(computeSignature('secret-b', body));
+		expect(computeSignature('secret-a', ts, body)).not.toBe(computeSignature('secret-b', ts, body));
 	});
 
 	it('produces a different signature for a different body', () => {
 		const secret = 'my-secret';
-		expect(computeSignature(secret, Buffer.from('a'))).not.toBe(
-			computeSignature(secret, Buffer.from('b')),
+		expect(computeSignature(secret, ts, Buffer.from('a'))).not.toBe(
+			computeSignature(secret, ts, Buffer.from('b')),
+		);
+	});
+
+	it('produces a different signature for a different timestamp (replay protection)', () => {
+		const body = Buffer.from('{"event":"test"}');
+		expect(computeSignature('my-secret', '1700000000', body)).not.toBe(
+			computeSignature('my-secret', '1700000001', body),
 		);
 	});
 });
@@ -44,12 +63,12 @@ describe('computeSignature', () => {
 describe('safeCompare', () => {
 	it('returns true for matching signatures', () => {
 		const body = Buffer.from('payload');
-		const expected = computeSignature('secret', body);
+		const expected = computeSignature('secret', '1700000000', body);
 		expect(safeCompare(expected, expected)).toBe(true);
 	});
 
 	it('returns false for a tampered signature of equal length', () => {
-		const expected = computeSignature('secret', Buffer.from('payload'));
+		const expected = computeSignature('secret', '1700000000', Buffer.from('payload'));
 		const tampered = '0'.repeat(expected.length);
 		expect(safeCompare(tampered === expected ? 'f'.repeat(expected.length) : tampered, expected)).toBe(
 			false,
@@ -61,7 +80,9 @@ describe('safeCompare', () => {
 	});
 
 	it('returns false when the received value is undefined', () => {
-		expect(safeCompare(undefined, computeSignature('secret', Buffer.from('x')))).toBe(false);
+		expect(safeCompare(undefined, computeSignature('secret', '1700000000', Buffer.from('x')))).toBe(
+			false,
+		);
 	});
 
 	it('returns false for non-hex input instead of throwing', () => {

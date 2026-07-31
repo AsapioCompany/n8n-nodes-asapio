@@ -6,8 +6,10 @@ export function extractHexSignature(headerValue: string | undefined): string | u
 	return prefix === 'sha256' ? hex : undefined;
 }
 
-export function computeSignature(secret: string, rawBody: Buffer): string {
-	return createHmac('sha256', secret).update(rawBody).digest('hex');
+export function computeSignature(secret: string, timestamp: string, rawBody: Buffer): string {
+	return createHmac('sha256', secret)
+		.update(Buffer.concat([Buffer.from(`${timestamp}.`, 'utf8'), rawBody]))
+		.digest('hex');
 }
 
 export function safeCompare(a: string | undefined, b: string): boolean {

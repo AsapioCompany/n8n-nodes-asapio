@@ -94,6 +94,25 @@ export class AsapioTrigger implements INodeType {
 				description:
 					'Whether to respond with HTTP 401 and skip triggering the workflow when the signature is missing, invalid, or stale. When disabled, the workflow always triggers and the verification result is attached to the output item under "asapio.signatureValid" so the workflow can decide.',
 			},
+			{
+				displayName: 'Response Code',
+				name: 'responseCode',
+				type: 'number',
+				default: 200,
+				description:
+					'HTTP status code returned to Event Studio to acknowledge receipt. Event Studio uses this to mark the event as delivered. Applies to the success path only — an invalid signature always responds with 401 when "Reject Invalid Signatures" is on.',
+			},
+			{
+				displayName: 'Response Body',
+				name: 'responseBody',
+				type: 'string',
+				typeOptions: {
+					rows: 2,
+				},
+				default: '{ "received": true }',
+				description:
+					'Body returned to Event Studio on successful receipt. Valid JSON is sent with a JSON content type; anything else is sent as plain text. Leave empty to send no body.',
+			},
 		],
 	};
 
@@ -157,7 +176,7 @@ export class AsapioTrigger implements INodeType {
 		);
 		const receivedTimestamp = Array.isArray(timestampHeader) ? timestampHeader[0] : timestampHeader;
 
-		const expectedSignature = computeSignature(secret, rawBody);
+		const expectedSignature = computeSignature(secret, receivedTimestamp ?? '', rawBody);
 		const signatureValid = safeCompare(receivedSignature, expectedSignature);
 
 		const { valid: timestampValid, ageSeconds } = isTimestampFresh(receivedTimestamp, tolerance);
@@ -184,11 +203,23 @@ export class AsapioTrigger implements INodeType {
 					status: 401,
 					body: { message: 'Signature verification failed', reasons },
 				},
-				noWebhookResponse: true,
 			};
 		}
 
+		const responseCode = this.getNodeParameter('responseCode', 200) as number;
+		const responseBodyRaw = this.getNodeParameter('responseBody', '') as string;
+		let responseBody: unknown = responseBodyRaw;
+		try {
+			responseBody = JSON.parse(responseBodyRaw);
+		} catch {
+			// Not JSON — send the raw string as-is (or empty string for no body).
+		}
+
 		return {
+			webhookResponse: {
+				status: responseCode,
+				body: responseBody,
+			},
 			workflowData: [
 				[
 					{
