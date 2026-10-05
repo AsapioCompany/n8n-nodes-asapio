@@ -30,7 +30,6 @@ export class AsapioTrigger implements INodeType {
 		defaults: {
 			name: 'ASAPIO Event Trigger',
 		},
-		usableAsTool: true,
 		inputs: [],
 		outputs: [NodeConnectionTypes.Main],
 		credentials: [
